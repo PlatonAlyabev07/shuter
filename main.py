@@ -14,8 +14,25 @@ WIN_HEIGHT = 500
 window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 clock = pygame.time.Clock()
 
+pygame.mixer.music.load(file_path("kosmos-28439.ogg"))
+pygame.mixer.music.set_volume(0.10)
+pygame.mixer.music.play(10)
+
 background = pygame.image.load(file_path("fon3.jpg"))
 background = pygame.transform.scale(background, (WIN_WIDTH, WIN_HEIGHT))
+
+class GameSprite(pygame.sprite.Sprite):
+    def __init__(self, image, x, y, width, height, speed):
+        super().__init__()
+        self.image = pygame.image.load(file_path(image))
+        self.image = pygame.transform.scale(self_image, (width, height))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speed = speed
+
+    def reset(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
 
 play = True
 game = True
