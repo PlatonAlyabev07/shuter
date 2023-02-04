@@ -11,6 +11,8 @@ def file_path(file_name):
 FPS = 40
 WIN_WIDTH = 700
 WIN_HEIGHT = 500
+RED = (200, 0, 0)
+GREEN = (0, 200, 0)
 
 window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 clock = pygame.time.Clock()
@@ -55,17 +57,26 @@ class Enemy(GameSprite):
         super().__init__(image, x, y, width, height, speed)
 
     def update(self):
+        global missed_enemies
         self.rect.y += self.speed
         if self.rect.y >= WIN_HEIGHT:
             self.rect.bottom = 0
             self.rect.x = randint(0, WIN_WIDTH - self.rect.width)
+            self.speed = randint(1, 3)
+            missed_enemies += 1
 
 player = Player("raketa.png", 300, 400, 70, 70, 5) 
 enemies = pygame.sprite.Group()
 
 for i in range(5):
-    enemy = Enemy(file_path("nlo.png"), randint(0, WIN_WIDTH - 70), 0, 50, 70, 3)
+    enemy = Enemy(file_path("nlo.png"), randint(0, WIN_WIDTH - 70), 0, 50, 70, randint(1, 3))
     enemies.add(enemy)
+
+missed_enemies = 0
+killed_enemies = 0
+font = pygame.font.SysFont("arial", 20, 0, 1)
+txt_missed = font.render("Пропущено: " + str(missed_enemies), True, RED)
+txt_killed = font.render("Влучено: " + str(killed_enemies), True, GREEN)
 
 play = True
 game = True
@@ -77,6 +88,12 @@ while game == True:
 
     if play == True:
         window.blit(background, (0, 0))
+        
+        txt_missed = font.render("Пропущено: " + str(missed_enemies), True, RED)
+        txt_killed = font.render("Влучено: " + str(killed_enemies), True, GREEN)
+
+        window.blit(txt_killed, (10, 10))
+        window.blit(txt_missed, (10, 40))
 
         player.reset()
         player.update()
